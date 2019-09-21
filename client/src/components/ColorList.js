@@ -21,18 +21,13 @@ const ColorList = ({ colors, updateColors }) => {
       .put(`/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
         updateColors(
-          colors.map(color =>
-            color.id === colorToEdit.id ? { ...res.data } : color
-          )
+          colors.map(color => (color.id === colorToEdit.id ? res.data : color))
         );
         setEditing(false);
       })
       .catch(err => {
         console.log(err);
       });
-    // Make a put request to save your updated color
-    // think about where will you get the id from...
-    // where is is saved right now?
   };
 
   const deleteColor = color => {
