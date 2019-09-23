@@ -10,6 +10,17 @@ const ColorList = ({ colors, updateColors }) => {
   const [editing, setEditing] = useState(false);
   const [colorToEdit, setColorToEdit] = useState(initialColor);
 
+  const fetchColors = () => {
+    axiosWithAuth()
+      .get("/colors")
+      .then(res => {
+        updateColors(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
   const editColor = color => {
     setEditing(true);
     setColorToEdit(color);
@@ -20,9 +31,7 @@ const ColorList = ({ colors, updateColors }) => {
     axiosWithAuth()
       .put(`/colors/${colorToEdit.id}`, colorToEdit)
       .then(res => {
-        updateColors(
-          colors.map(color => (color.id === colorToEdit.id ? res.data : color))
-        );
+        fetchColors();
         setEditing(false);
       })
       .catch(err => {
@@ -36,7 +45,7 @@ const ColorList = ({ colors, updateColors }) => {
     axiosWithAuth()
       .delete(`/colors/${id}`)
       .then(res => {
-        updateColors(colors.filter(color => color.id !== res.data));
+        fetchColors();
       })
       .catch(err => console.log(err));
   };
